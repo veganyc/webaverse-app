@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import React, { useEffect, useRef } from 'react';
 import classnames from 'classnames';
+import { MToonMaterial } from '@pixiv/three-vrm';
 
 import metaversefile from 'metaversefile';
 
@@ -9,28 +10,82 @@ import styles from './character-overview.module.css';
 
 //
 
-export const CharacterOverview = ({ open, setOpen }) => {
+let renderer;
+let camera;
+let scene;
+let oldParent = null;
+
+//
+
+export const CharacterOverview = ({ opened, setOpened }) => {
 
     const canvas = useRef( null );
-    let renderer;
-    let camera;
-    let scene;
-
     const localPlayer = metaversefile.useLocalPlayer();
 
     //
 
     const handleCloseBtnClick = ( event ) => {
 
-        event.stopPropagation();
-        setOpen( false );
+        setOpened( false );
 
     };
 
-    const renderLoop = () => {
+    const resetAvatarMesh = ( mesh, mode ) => {
 
-        if ( ! open ) return;
-        requestAnimationFrame( renderLoop );
+        mesh.traverse( ( item ) => {
+
+            if ( item instanceof THREE.Mesh ) {
+
+                if ( item.material instanceof Array ) {
+
+                    const materials = [];
+
+                    item.material.forEach( ( oldMaterial ) => {
+
+                        let newMaterial;
+
+                        // tmp this should be changed later to proper clone method
+
+                        newMaterial = new THREE.MeshLambertMaterial({ map: oldMaterial.map, color: 0x111111 });
+                        materials.push( newMaterial );
+
+                    });
+
+                    if ( mode === 'inventory' ) {
+
+                        item.userData.sceneOrigMaterial = item.userData.sceneOrigMaterial ?? item.material;
+                        item.material = materials;
+
+                    } else {
+
+                        item.material = item.userData.sceneOrigMaterial;
+
+                    }
+
+                    item.material.forEach( ( oldMaterial ) => { oldMaterial.needsUpdate = true; });
+
+                } else {
+
+                    if ( mode === 'inventory' ) {
+
+                        item.userData.sceneOrigMaterial = item.material;
+                        item.material = item.material.clone();
+
+                    } else {
+
+                        item.material = item.userData.sceneOrigMaterial;
+
+                    }
+
+                }
+
+            }
+
+        });
+
+    };
+
+    const refresh = ( enabled ) => {
 
         if ( ! renderer && canvas ) {
 
@@ -46,11 +101,32 @@ export const CharacterOverview = ({ open, setOpen }) => {
             scene.background = null;
 
             scene.add( new THREE.AmbientLight( 0xffffff, 10 ) );
-            scene.add( localPlayer.avatar.model );
+
+        } else {
+
+            const avatarModel = localPlayer.avatar.model;
+
+            if ( enabled ) {
+
+                oldParent = avatarModel.parent;
+                avatarModel.parent.remove( avatarModel );
+                resetAvatarMesh( avatarModel, 'inventory' );
+                scene.add( avatarModel );
+
+            } else if ( ! enabled && oldParent ) {
+
+                avatarModel.parent.remove( avatarModel );
+                resetAvatarMesh( avatarModel, 'mainscene' );
+                oldParent.add( avatarModel );
+                oldParent = null;
+
+            }
 
         }
 
-        //
+    };
+
+    const render = () => {
 
         renderer.render( scene, camera );
 
@@ -58,19 +134,25 @@ export const CharacterOverview = ({ open, setOpen }) => {
 
     useEffect( () => {
 
-        if ( open ) renderLoop();
+        let renderLoop = () => {
+
+            render();
+            if ( ! renderLoop || ! opened ) return;
+            requestAnimationFrame( renderLoop );
+
+        };
 
         const handleKeyPress = ( event ) => {
 
-            if ( open && event.key === 'Escape' ) {
+            if ( opened && event.key === 'Escape' ) {
 
-                setOpen( false );
+                setOpened( false );
 
             }
 
-            if ( open === false && event.which === 73 ) {
+            if ( opened === false && event.which === 73 ) {
 
-                setOpen( true );
+                setOpened( true );
 
             }
 
@@ -78,18 +160,24 @@ export const CharacterOverview = ({ open, setOpen }) => {
 
         window.addEventListener( 'keydown', handleKeyPress );
 
+        refresh( opened );
+        renderLoop();
+
+        //
+
         return () => {
 
             window.removeEventListener( 'keydown', handleKeyPress );
+            renderLoop = null;
 
         };
 
-    }, [ open ] );
+    }, [ opened ] );
 
     //
 
     return (
-        <div className={ classnames( styles.characterOverview, open ? styles.open : null ) }>
+        <div className={ classnames( styles.characterOverview, opened ? styles.open : null ) }>
             <div className={ styles.characterItems }>
                 <div className={ styles.header }>
                     ITEMS

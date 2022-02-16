@@ -16,18 +16,18 @@ import styles from './play-mode.module.css';
 
 export const PlayMode = ({ setLoginOpenPopupOpened, loginInState, username }) => {
 
-    const [ characterOverviewOpen, setCharacterOverviewOpen ] = useState( false );
-    const [ settingsOpen, setSettingsOpen ] = useState( false );
+    const [ characterOverviewOpened, setCharacterOverviewOpened ] = useState( false );
+    const [ settingsOpened, setSettingsOpened ] = useState( false );
 
     //
 
     return (
         <div className={ styles.playMode }>
-            <CharacterOverview open={ characterOverviewOpen } setOpen={ setCharacterOverviewOpen } />
-            <Settings open={ settingsOpen } setOpen={ setSettingsOpen } />
-            <ActionMenu openSettings={ setSettingsOpen } />
+            <CharacterOverview opened={ characterOverviewOpened } setOpened={ setCharacterOverviewOpened } />
+            <Settings opened={ settingsOpened } setOpened={ setSettingsOpened } />
+            <ActionMenu openSettings={ setSettingsOpened } />
             <LocationMenu />
-            <Inventory openCharacterOverview={ setCharacterOverviewOpen } />
+            <Inventory openCharacterOverview={ setCharacterOverviewOpened } />
             <Hotbar />
             <PlayerZone username={ username } setLoginOpenPopupOpened={ setLoginOpenPopupOpened } loginInState={ loginInState } />
             <Chat />

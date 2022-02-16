@@ -11,14 +11,14 @@ import styles from './settings.module.css';
 
 //
 
-export const Settings = ({ open, setOpen }) => {
+export const Settings = ({ opened, setOpened }) => {
 
     const [ activeTab, setActiveTab ] = useState('general');
 
     const handleCloseBtnClick = ( event ) => {
 
         event.stopPropagation();
-        setOpen( false );
+        setOpened( false );
 
     };
 
@@ -35,9 +35,9 @@ export const Settings = ({ open, setOpen }) => {
 
         const handleKeyPress = ( event ) => {
 
-            if ( open && event.key === 'Escape' ) {
+            if ( opened && event.key === 'Escape' ) {
 
-                setOpen( false );
+                setOpened( false );
 
             }
 
@@ -51,13 +51,13 @@ export const Settings = ({ open, setOpen }) => {
 
         };
 
-    }, [ open ] );
+    }, [ opened ] );
 
     //
 
     return (
 
-        <div className={ classNames( styles.settings, open ? styles.open : null ) } >
+        <div className={ classNames( styles.settings, opened ? styles.open : null ) } >
 
             <div className={ styles.closeBtn } onClick={ handleCloseBtnClick }>X</div>
 
