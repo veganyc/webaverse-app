@@ -198,7 +198,7 @@ export const SceneSelect = ({ multiplayerConnected, selectedScene, setSelectedSc
                 <div className={ styles.rooms }>
                 {
                     sceneNames.map( ( sceneName, i ) => (
-                        <div className={ styles.room } onMouseUp={ ( e ) => { handleSceneSelect( e, sceneName ) } } key={ i }>
+                        <div className={ styles.room } onMouseDown={ ( e ) => { handleSceneSelect( e, sceneName ) } } key={ i }>
                             <img className={ styles.image } src="images/world.jpg" />
                             <div className={ styles.name }>{ sceneName }</div>
                         </div>
@@ -212,11 +212,11 @@ export const SceneSelect = ({ multiplayerConnected, selectedScene, setSelectedSc
             roomsMenuOpened ? (
                 <div className={ styles.rooms }>
                     <div className={ styles.create }>
-                        <button className={ styles.button } onMouseUp={ handleRoomCreateBtnClick }>Create room</button>
+                        <button className={ styles.button } onMouseDown={ handleRoomCreateBtnClick }>Create room</button>
                     </div>
                     {
                         rooms.map( ( room, i ) => (
-                            <div className={ styles.room } onMouseUp={ ( e ) => { handleRoomSelect( e, roomName ) } } key={ i }>
+                            <div className={ styles.room } onMouseDown={ ( e ) => { handleRoomSelect( e, roomName ) } } key={ i }>
                                 <img className={ styles.image } src="images/world.jpg" />
                                 <div className={ styles.name }>{ room.name }</div>
                                 <div className={ styles.delete }>

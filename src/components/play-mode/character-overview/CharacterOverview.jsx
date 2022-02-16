@@ -1,6 +1,6 @@
 
 import * as THREE from 'three';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 
 import metaversefile from 'metaversefile';
@@ -21,6 +21,22 @@ export const CharacterOverview = ({ opened, setOpened }) => {
 
     const canvas = useRef( null );
     const localPlayer = metaversefile.useLocalPlayer();
+
+    const getItems = () => {
+
+        const items = localPlayer.getActionsArray().filter( action => action.type === 'wear' );
+
+        for ( let i = items.length; i < 15; i ++ ) {
+
+            items.push( null );
+
+        }
+
+        return items;
+
+    };
+
+    const [ items, setItems ] = useState( [] );
 
     //
 
@@ -111,7 +127,6 @@ export const CharacterOverview = ({ opened, setOpened }) => {
             if ( enabled ) {
 
                 oldParent = avatarModel.parent;
-                console.log( avatarModel );
                 avatarModel.parent.remove( avatarModel );
                 resetAvatarMesh( avatarModel, 'inventory' );
 
@@ -147,6 +162,8 @@ export const CharacterOverview = ({ opened, setOpened }) => {
 
     useEffect( () => {
 
+        setItems( getItems() );
+
         let renderLoop = () => {
 
             render();
@@ -156,6 +173,9 @@ export const CharacterOverview = ({ opened, setOpened }) => {
         };
 
         const handleKeyPress = ( event ) => {
+
+            event.preventDefault();
+            event.stopPropagation();
 
             if ( opened && event.key === 'Escape' ) {
 
@@ -197,24 +217,11 @@ export const CharacterOverview = ({ opened, setOpened }) => {
                 </div>
                 <div className={ styles.contentWrapper }>
                     <div className={ styles.content }>
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
-                        <div className={ styles.slot } />
+                        {
+                            items.map( ( action, i ) => (
+                                <div className={ styles.slot } key={ `slot-${ i }` } />
+                            ))
+                        }
                     </div>
                 </div>
             </div>
