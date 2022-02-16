@@ -2,7 +2,6 @@
 import * as THREE from 'three';
 import React, { useEffect, useRef } from 'react';
 import classnames from 'classnames';
-import { MToonMaterial } from '@pixiv/three-vrm';
 
 import metaversefile from 'metaversefile';
 
@@ -13,6 +12,7 @@ import styles from './character-overview.module.css';
 let renderer;
 let camera;
 let scene;
+let characterWrapper;
 let oldParent = null;
 
 //
@@ -89,6 +89,7 @@ export const CharacterOverview = ({ opened, setOpened }) => {
 
         if ( ! renderer && canvas ) {
 
+            characterWrapper = new THREE.Object3D();
             renderer = new THREE.WebGLRenderer({ canvas: canvas.current, antialias: true, alpha: true });
             const canvasSize = canvas.current.parentNode.getBoundingClientRect();
             renderer.setSize( canvasSize.width, canvasSize.height );
@@ -100,6 +101,7 @@ export const CharacterOverview = ({ opened, setOpened }) => {
             scene = new THREE.Scene();
             scene.background = null;
 
+            scene.add( characterWrapper );
             scene.add( new THREE.AmbientLight( 0xffffff, 10 ) );
 
         } else {
@@ -109,15 +111,26 @@ export const CharacterOverview = ({ opened, setOpened }) => {
             if ( enabled ) {
 
                 oldParent = avatarModel.parent;
+                console.log( avatarModel );
                 avatarModel.parent.remove( avatarModel );
                 resetAvatarMesh( avatarModel, 'inventory' );
-                scene.add( avatarModel );
+
+                const characterPos = localPlayer.getPosition();
+                const characterRot = localPlayer.getQuaternion();
+                const quaternion = new THREE.Quaternion().set( characterRot[0], characterRot[1], characterRot[2], characterRot[3] );
+                const rot = new THREE.Euler().setFromQuaternion( quaternion, 'XYZ' );
+                avatarModel.position.set( - characterPos[0], - characterPos[1] + 1.25, - characterPos[2] );
+                characterWrapper.rotation.set( - rot.x, - rot.y, - rot.z );
+                characterWrapper.add( avatarModel );
+                characterWrapper.updateMatrixWorld( true, true );
 
             } else if ( ! enabled && oldParent ) {
 
                 avatarModel.parent.remove( avatarModel );
                 resetAvatarMesh( avatarModel, 'mainscene' );
                 oldParent.add( avatarModel );
+                avatarModel.position.set( 0, 0, 0 );
+                avatarModel.updateMatrixWorld( true, true );
                 oldParent = null;
 
             }
