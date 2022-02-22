@@ -1,0 +1,71 @@
+
+.playerZone {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 340px;
+    height: 70px;
+    z-index: 5;
+}
+
+.loginBtn {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding: 15px;
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+}
+
+.username {
+    position: absolute;
+    left: 85px;
+    top: 5px;
+    font-size: 10px;
+}
+
+.avatar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 70px;
+    height: 70px;
+    background-color: #000;
+    opacity: 0.5;
+}
+
+.progressBar {
+    position: absolute;
+    width: 250px;
+    height: 8px;
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progressBarFill {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 50%;
+    height: 100%;
+}
+
+.healthBar {
+    top: 35px;
+    left: 85px;
+}
+
+.manaBar {
+    top: 25px;
+    left: 85px;
+}
+
+.healthBar .progressBarFill {
+    background-color: #f50;
+}
+
+.manaBar .progressBarFill {
+    background-color: #55f;
+}

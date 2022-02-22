@@ -69,6 +69,9 @@ export const App = () => {
     const [ selectedScene, setSelectedScene ] = useState( _getCurrentSceneSrc() );
     const [ selectedRoom, setSelectedRoom ] = useState( _getCurrentRoom() );
 
+    const [ loginState, setLoginState ] = useState( '' );
+    const [ username, setUsername ] = useState( '' );
+
     const [ settingsOpened, setSettingsOpened ] = useState( false );
     const [ worldObjectsListOpened, setWorldObjectsListOpened ] = useState( false );
     const [ characterOverviewOpened, setCharacterOverviewOpened ] = useState( false );
@@ -129,11 +132,30 @@ export const App = () => {
             <Header app={ app } />
             <canvas className={ styles.canvas } ref={ canvasRef } id="canvas" />
             <Crosshair />
-            <ActionMenu app={ app } setSettingsOpened={ setSettingsOpened } setWorldObjectsListOpened={ setWorldObjectsListOpened } setCharacterOverviewOpened={ setCharacterOverviewOpened } />
+
+            <ActionMenu
+                app={ app }
+                setSettingsOpened={ setSettingsOpened }
+                setWorldObjectsListOpened={ setWorldObjectsListOpened }
+                setCharacterOverviewOpened={ setCharacterOverviewOpened }
+            />
+
+            <PlayMode
+                characterOverviewOpened={ characterOverviewOpened }
+                setCharacterOverviewOpened={ setCharacterOverviewOpened }
+                username={ username }
+                setUsername={ setUsername }
+            />
+
+            <EditorMode
+                selectedScene={ selectedScene }
+                setSelectedScene={ setSelectedScene }
+                selectedRoom={ selectedRoom }
+                setSelectedRoom={ setSelectedRoom }
+            />
+
             <Settings opened={ settingsOpened } setOpened={ setSettingsOpened } />
             <WorldObjectsList opened={ worldObjectsListOpened } setOpened={ setWorldObjectsListOpened } />
-            <PlayMode characterOverviewOpened={ characterOverviewOpened } setCharacterOverviewOpened={ setCharacterOverviewOpened } />
-            <EditorMode selectedScene={ selectedScene } setSelectedScene={ setSelectedScene } selectedRoom={ selectedRoom } setSelectedRoom={ setSelectedRoom } />
         </div>
     );
 
