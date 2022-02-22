@@ -13,11 +13,9 @@ import styles from './play-mode.module.css';
 
 export const PlayMode = ({ characterOverviewOpened, setCharacterOverviewOpened }) => {
 
-    //
-
     return (
         <div className={ styles.playMode }>
-            <PlayerZone username={ '' } loginInState={ false } setLoginOpenPopupOpened={ null } />
+            <PlayerZone username={ '' } />
             <Minimap />
             <Hotbar />
             <Inventory />

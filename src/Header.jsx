@@ -237,7 +237,7 @@ export default function Header({
       <div className={styles.inner}>
 				<header className={styles.header}>
           <div className={styles.row}>
-            <a href="/" className={styles.logo}>
+            {/* <a href="/" className={styles.logo}>
               <img src="images/arrow-logo.svg" className={styles.image} />
             </a>
             <User
@@ -247,12 +247,12 @@ export default function Header({
               setOpen={setOpen}
               toggleOpen={toggleOpen}
               setLoginFrom={setLoginFrom}
-            />
+            /> */}
           </div>
 				</header>
         <header className={classnames(styles.header, styles.subheader)}>
           <div className={styles.row}>
-          <Character
+          {/* <Character
               open={open}
               setOpen={setOpen}
               toggleOpen={toggleOpen}
@@ -260,7 +260,7 @@ export default function Header({
               wearActions={wearActions}
               previewCanvasRef={previewCanvasRef}
               game={game}
-            />
+            /> */}
             <Claims
               claims={claims}
               open={open}
