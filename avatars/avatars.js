@@ -394,6 +394,7 @@ class Avatar {
       };
     }
 
+    window.avatar = this;
     this.object = object;
 
     const model = (() => {
@@ -942,8 +943,8 @@ class Avatar {
     this.direction = new THREE.Vector3();
     this.jumpState = false;
     this.jumpTime = NaN;
-    this.flyState = false;
-    this.flyTime = NaN;
+    // this.flyState = this.tracker.getState('fly', true);  //we likely don't need these anymore
+    // this.flyTime = this.tracker.getState('fly').time;
 
     this.useTime = NaN;
     this.useAnimation = null;
