@@ -15,22 +15,17 @@ import easing from '../easing.js';
 import Simplex from '../simplex-noise.js';
 import {
   crouchMaxTime,
-  useMaxTime,
-  aimMaxTime,
   avatarInterpolationFrameRate,
-  avatarInterpolationTimeDelay,
-  avatarInterpolationNumFrames,
+  // useMaxTime,
+  // aimMaxTime,
+  // avatarInterpolationTimeDelay,
+  // avatarInterpolationNumFrames,
 } from '../constants.js';
 import {FixedTimeStep} from '../interpolants.js';
 import * as avatarCruncher from '../avatar-cruncher.js';
 import * as avatarSpriter from '../avatar-spriter.js';
 import game from '../game.js';
-import {
-  idleFactorSpeed,
-  walkFactorSpeed,
-  runFactorSpeed,
-  narutoRunTimeFactor,
-} from './constants.js';
+
 import {
   getSkinnedMeshes,
   getSkeleton,
@@ -120,7 +115,7 @@ const defaultNarutoRunAnimation = 'narutoRun';
 
 const infinityUpVector = new THREE.Vector3(0, Infinity, 0);
 import {
-  animations,
+  loadedAnimations,
   animationStepIndices
 } from './animationHelpers.js';
 
@@ -1009,7 +1004,7 @@ class Avatar {
     const tailBones = getTailBones(object);
     const modelBones = getModelBones(object);
     
-    /* const retargetedAnimations = animations
+    /* const retargetedAnimations = loadedAnimations
       .filter(a => a.name === 'idle.fbx')
       .map(a => retargetAnimation(a, animationsBaseModel, object)); */
     
@@ -1447,12 +1442,7 @@ class Avatar {
   update(timestamp, timeDiff) {
     const now = timestamp;
     const timeDiffS = timeDiff / 1000;
-    const currentSpeed = this.localVector.set(this.velocity.x, 0, this.velocity.z).length();
 
-    const moveFactors = {};
-    moveFactors.idleWalkFactor = Math.min(Math.max((currentSpeed - idleFactorSpeed) / (walkFactorSpeed - idleFactorSpeed), 0), 1);
-    moveFactors.walkRunFactor = Math.min(Math.max((currentSpeed - walkFactorSpeed) / (runFactorSpeed - walkFactorSpeed), 0), 1);
-    moveFactors.crouchFactor = Math.min(Math.max(1 - (this.crouchTime / crouchMaxTime), 0), 1);
     // console.log('current speed', currentSpeed, idleWalkFactor, walkRunFactor);
 
     const _updateHmdPosition = () => {
@@ -1480,8 +1470,8 @@ class Avatar {
     };
     
     const _overwritePose = poseName => {
-      const poseAnimation = animations.index[poseName];
-      // const noiseAnimation = animations.index['t-pose_rot.fbx'];
+      const poseAnimation = loadedAnimations.index[poseName];
+      // const noiseAnimation = loadedAnimations.index['t-pose_rot.fbx'];
       // const noiseTime = (now/1000) % noiseAnimation.duration;
       for (const spec of this.animationMappings) {
         const {
@@ -1854,7 +1844,7 @@ class Avatar {
     }
 
     _updateHmdPosition();
-    _applyAnimation(this, now, moveFactors);
+    _applyAnimation(this, now);
 
     if (this.poseAnimation) {
       _overwritePose(this.poseAnimation);
@@ -2031,7 +2021,7 @@ class Avatar {
   }
 }
 Avatar.waitForLoad = () => loadPromise;
-Avatar.getAnimations = () => animations;
+Avatar.getAnimations = () => loadedAnimations;
 Avatar.getAnimationStepIndices = () => animationStepIndices;
 Avatar.getAnimationMappingConfig = () => animationMappingConfig;
 let avatarAudioContext = null;
