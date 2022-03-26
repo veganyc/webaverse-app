@@ -496,22 +496,18 @@ class StatePlayer extends PlayerBase {
         const avatar = switchAvatar(this.avatar, app);
         if (!cancelFn.isLive()) return;
         this.avatar = avatar;
-
+        
+        if(avatar){
         this.dispatchEvent({
           type: 'avatarchange',
           app,
           avatar,
         });
-        
-        loadPhysxCharacterController.call(this);
-        // console.log('disable actor', this.characterController);
-        physicsManager.disableGeometryQueries(this.characterController);
+          loadPhysxCharacterController.call(this);
+          // console.log('disable actor', this.characterController);
+          physicsManager.disableGeometryQueries(this.characterController);
+        }
       })();
-      
-      this.dispatchEvent({
-        type: 'avatarupdate',
-        app,
-      });
     };
     
     if (instanceId) {
@@ -1096,8 +1092,26 @@ class RemotePlayer extends InterpolatedPlayer {
     
     this.appManager.bindState(this.getAppsState());
     this.appManager.loadApps();
-    
     this.syncAvatar();
+  }
+  updateAvatar(timestamp, timeDiff) {
+
+    if (this.avatar) {
+      const timeDiffS = timeDiff / 1000;
+      this.characterSfx?.update(timestamp, timeDiffS);
+      this.characterFx?.update(timestamp, timeDiffS);
+
+      this.updateInterpolation(timeDiff);
+      const mirrors = metaversefile.getMirrors();
+      applyPlayerToAvatar(this, null, this.avatar, mirrors);
+
+      this.avatar.update(timestamp, timeDiff, false);
+      this.characterHups?.update(timestamp);
+    }
+  }
+  updatePhysics = () => {} // LocalPlayer.prototype.updatePhysics;
+  getSession() {
+    return null;
   }
 }
 class StaticUninterpolatedPlayer extends PlayerBase {
