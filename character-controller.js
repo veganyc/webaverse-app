@@ -1086,8 +1086,8 @@ class RemotePlayer extends InterpolatedPlayer {
         for (const actionBinaryInterpolant of this.actionBinaryInterpolantsArray) {
           actionBinaryInterpolant.snapshot(remoteTimeDiff);
         }
-
-        this.avatar.setVelocity(remoteTimeDiff / 1000, lastPosition, this.position, this.quaternion);
+        if(this.avatar)
+          this.avatar.setVelocity(remoteTimeDiff / 1000, lastPosition, this.position, this.quaternion);
       }
     };
     this.playerMap.observe(observePlayerFn);
