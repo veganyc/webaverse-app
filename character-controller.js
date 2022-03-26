@@ -494,20 +494,25 @@ class StatePlayer extends PlayerBase {
     const _setNextAvatarApp = app => {
       (() => {
         const avatar = switchAvatar(this.avatar, app);
+        if(!avatar) return console.warn("Avatar null, not dispatching")
         if (!cancelFn.isLive()) return;
         this.avatar = avatar;
-        
-        if(avatar){
+
         this.dispatchEvent({
           type: 'avatarchange',
           app,
           avatar,
         });
-          loadPhysxCharacterController.call(this);
-          // console.log('disable actor', this.characterController);
-          physicsManager.disableGeometryQueries(this.characterController);
-        }
+        
+        loadPhysxCharacterController.call(this);
+        // console.log('disable actor', this.characterController);
+        physicsManager.disableGeometryQueries(this.characterController);
       })();
+      
+      this.dispatchEvent({
+        type: 'avatarupdate',
+        app,
+      });
     };
     
     if (instanceId) {

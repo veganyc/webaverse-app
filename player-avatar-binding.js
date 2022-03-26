@@ -238,7 +238,7 @@ export function switchAvatar(oldAvatar, newApp) {
   } else {
     result = null;
   }
-  return result;
+  return result ?? oldAvatar;
 }
 /* export async function switchAvatar(oldAvatar, newApp) {
   let result;
