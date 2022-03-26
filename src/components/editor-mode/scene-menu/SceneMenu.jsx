@@ -61,13 +61,7 @@ export const SceneMenu = ({ multiplayerConnected, selectedScene, setSelectedScen
 
         sceneName = sceneName ?? event.target.value;
         setSelectedScene( sceneName );
-        if(multiplayerConnected){
-            universe.pushUrl( `/?src=${ encodeURIComponent( './scenes/' + sceneName ) }&room=${ selectedRoom }` );
-        }
-        else{
-            universe.pushUrl( `/?src=${ encodeURIComponent( './scenes/' + sceneName ) }` );
-        }
-        
+        universe.pushUrl( `/?src=${ encodeURIComponent( './scenes/' + sceneName ) }` );        
 
     };
 
@@ -89,6 +83,7 @@ export const SceneMenu = ({ multiplayerConnected, selectedScene, setSelectedScen
 
         const res = await fetch( universe.getWorldsHost() + roomName, { method: 'POST', body: data } );
         if ( res.ok ) {
+            console.log("createRoomScene is", createRoomScene)
             setSelectedScene( createRoomScene );
 
             setSelectedRoom( roomName );
@@ -295,7 +290,7 @@ export const SceneMenu = ({ multiplayerConnected, selectedScene, setSelectedScen
                         <select style={{display: "inline", margin: "1em", padding: ".5em", height: "2.5em", borderRadius: ".5em", minWidth: "295px" }} id="sceneName" size="large" onChange={e => { console.log('Setting room scene to,', './scenes/' + e.target.value); setCreateRoomScene('./scenes/' + e.target.value) }}>
                         {
                             sceneNames.map( ( sceneName, i ) => (
-                                <option key={sceneName} value={sceneName} selected={sceneName === selectedScene}>{sceneName}</option>
+                                <option key={sceneName} value={sceneName}>{sceneName}</option>
                             ))
                         }
                         </select>
