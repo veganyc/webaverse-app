@@ -975,7 +975,7 @@ class LocalPlayer extends UninterpolatedPlayer {
     camera.updateMatrixWorld();
   } */
   
-  pushPlayerUpdates() {
+  pushPlayerUpdates(timeDiff) {
     this.playersArray.doc.transact(() => {
       /* if (isNaN(this.position.x) || isNaN(this.position.y) || isNaN(this.position.z)) {
         debugger;
