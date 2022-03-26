@@ -49,8 +49,8 @@ export const User = ({ address, setAddress, setLoginFrom }) => {
 
                 try {
 
-                    const { address, profile } = await ceramicApi.login();
-                    setAddress(address);
+                    const newAddress = await ceramicApi.login();
+                    if (newAddress.address) setAddress(newAddress.address);
                     setLoginFrom('metamask');
                     setShow(false);
                     setLoginFrom('metamask');
