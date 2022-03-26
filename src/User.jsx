@@ -85,17 +85,17 @@ export const User = ({ address, setAddress, setLoginFrom }) => {
 
                 WebaWallet.waitForLaunch().then( async () => {
 
-                    const { address, error } = await WebaWallet.loginDiscord( code, id );
+                    const loginResponse = await WebaWallet.loginDiscord( code, id );
 
-                    if ( address ) {
+                    if ( loginResponse && loginResponse.address ) {
 
-                        setAddress( address );
+                        setAddress( loginResponse.address );
                         setLoginFrom( 'discord' );
                         setShow( false );
 
                     } else if ( error ) {
 
-                        setLoginError( String( error ).toLocaleUpperCase() );
+                        setLoginError( String( loginResponse.error ).toLocaleUpperCase() );
 
                     }
 
