@@ -133,7 +133,7 @@ export const SceneMenu = ({ multiplayerConnected, selectedScene, setSelectedScen
         setScenesMenuOpened( false );
         setRoomsMenuOpened( false );
 
-        if ( ! world.isConnected() ) {
+        // if ( ! world.isConnected() ) {
 
             universe.pushUrl( `/?src=${ encodeURIComponent( selectedScene ) }&room=${ room.name }` );
 
@@ -144,7 +144,7 @@ export const SceneMenu = ({ multiplayerConnected, selectedScene, setSelectedScen
               setMultiplayerOpen(false);
             } */
 
-        }
+        // }
 
     };
 
