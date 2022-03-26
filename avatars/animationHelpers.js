@@ -1,18 +1,18 @@
-import { Vector3, Quaternion, AnimationClip } from 'three';
+import {Vector3, Quaternion, AnimationClip} from 'three';
 import metaversefile from 'metaversefile';
-import { VRMSpringBoneImporter, VRMLookAtApplyer, VRMCurveMapper } from '@pixiv/three-vrm/lib/three-vrm.module.js';
+import {VRMSpringBoneImporter, VRMLookAtApplyer, VRMCurveMapper} from '@pixiv/three-vrm/lib/three-vrm.module.js';
 import easing from '../easing.js';
 import loaders from '../loaders.js';
-import { zbdecode } from 'zjs/encoding.mjs';
+import {zbdecode} from 'zjs/encoding.mjs';
 
 import {
-  //   getSkinnedMeshes,
-  //   getSkeleton,
-  //   getEyePosition,
-  //   getHeight,
+//   getSkinnedMeshes,
+//   getSkeleton,
+//   getEyePosition,
+//   getHeight,
   // makeBoneMap,
-  //   getTailBones,
-  //   getModelBones,
+//   getTailBones,
+//   getModelBones,
   // cloneModelBones,
   decorateAnimation,
   // retargetAnimation,
@@ -108,31 +108,31 @@ let activeMoveFactors;
 
 const animationsAngleArrays = {
   walk: [
-    { name: 'left strafe walking.fbx', angle: Math.PI / 2 },
-    { name: 'right strafe walking.fbx', angle: -Math.PI / 2 },
+    {name: 'left strafe walking.fbx', angle: Math.PI / 2},
+    {name: 'right strafe walking.fbx', angle: -Math.PI / 2},
 
-    { name: 'walking.fbx', angle: 0 },
-    { name: 'walking backwards.fbx', angle: Math.PI },
+    {name: 'walking.fbx', angle: 0},
+    {name: 'walking backwards.fbx', angle: Math.PI},
 
     // {name: 'left strafe walking reverse.fbx', angle: Math.PI*3/4},
     // {name: 'right strafe walking reverse.fbx', angle: -Math.PI*3/4},
   ],
   run: [
-    { name: 'left strafe.fbx', angle: Math.PI / 2 },
-    { name: 'right strafe.fbx', angle: -Math.PI / 2 },
+    {name: 'left strafe.fbx', angle: Math.PI / 2},
+    {name: 'right strafe.fbx', angle: -Math.PI / 2},
 
-    { name: 'Fast Run.fbx', angle: 0 },
-    { name: 'running backwards.fbx', angle: Math.PI },
+    {name: 'Fast Run.fbx', angle: 0},
+    {name: 'running backwards.fbx', angle: Math.PI},
 
     // {name: 'left strafe reverse.fbx', angle: Math.PI*3/4},
     // {name: 'right strafe reverse.fbx', angle: -Math.PI*3/4},
   ],
   crouch: [
-    { name: 'Crouched Sneaking Left.fbx', angle: Math.PI / 2 },
-    { name: 'Crouched Sneaking Right.fbx', angle: -Math.PI / 2 },
+    {name: 'Crouched Sneaking Left.fbx', angle: Math.PI / 2},
+    {name: 'Crouched Sneaking Right.fbx', angle: -Math.PI / 2},
 
-    { name: 'Sneaking Forward.fbx', angle: 0 },
-    { name: 'Sneaking Forward reverse.fbx', angle: Math.PI },
+    {name: 'Sneaking Forward.fbx', angle: 0},
+    {name: 'Sneaking Forward reverse.fbx', angle: Math.PI},
 
     // {name: 'Crouched Sneaking Left reverse.fbx', angle: Math.PI*3/4},
     // {name: 'Crouched Sneaking Right reverse.fbx', angle: -Math.PI*3/4},
@@ -140,23 +140,23 @@ const animationsAngleArrays = {
 };
 const animationsAngleArraysMirror = {
   walk: [
-    { name: 'left strafe walking reverse.fbx', matchAngle: -Math.PI / 2, angle: -Math.PI / 2 },
-    { name: 'right strafe walking reverse.fbx', matchAngle: Math.PI / 2, angle: Math.PI / 2 },
+    {name: 'left strafe walking reverse.fbx', matchAngle: -Math.PI / 2, angle: -Math.PI / 2},
+    {name: 'right strafe walking reverse.fbx', matchAngle: Math.PI / 2, angle: Math.PI / 2},
   ],
   run: [
-    { name: 'left strafe reverse.fbx', matchAngle: -Math.PI / 2, angle: -Math.PI / 2 },
-    { name: 'right strafe reverse.fbx', matchAngle: Math.PI / 2, angle: Math.PI / 2 },
+    {name: 'left strafe reverse.fbx', matchAngle: -Math.PI / 2, angle: -Math.PI / 2},
+    {name: 'right strafe reverse.fbx', matchAngle: Math.PI / 2, angle: Math.PI / 2},
   ],
   crouch: [
-    { name: 'Crouched Sneaking Left reverse.fbx', matchAngle: -Math.PI / 2, angle: -Math.PI / 2 },
-    { name: 'Crouched Sneaking Right reverse.fbx', matchAngle: Math.PI / 2, angle: Math.PI / 2 },
+    {name: 'Crouched Sneaking Left reverse.fbx', matchAngle: -Math.PI / 2, angle: -Math.PI / 2},
+    {name: 'Crouched Sneaking Right reverse.fbx', matchAngle: Math.PI / 2, angle: Math.PI / 2},
   ],
 };
 const animationsIdleArrays = {
-  reset: { name: 'reset.fbx' },
-  walk: { name: 'idle.fbx' },
-  run: { name: 'idle.fbx' },
-  crouch: { name: 'Crouch Idle.fbx' },
+  reset: {name: 'reset.fbx'},
+  walk: {name: 'idle.fbx'},
+  run: {name: 'idle.fbx'},
+  crouch: {name: 'Crouch Idle.fbx'},
 };
 
 const cubicBezier = easing(0, 1, 0, 1);
@@ -174,7 +174,7 @@ const _normalizeAnimationDurations = (animations, baseAnimation, factor = 1) => 
     const oldDuration = animation.duration;
     const newDuration = baseAnimation.duration;
     for (const track of animation.tracks) {
-      const { times } = track;
+      const {times} = track;
       for (let j = 0; j < times.length; j++) {
         times[j] *= newDuration / oldDuration * factor;
       }
@@ -217,7 +217,7 @@ async function loadSkeleton() {
   let o;
   try {
     o = await new Promise((accept, reject) => {
-      const { gltfLoader } = loaders;
+      const {gltfLoader} = loaders;
       gltfLoader.load(srcUrl, () => {
         accept();
       }, function onprogress() { }, reject);
@@ -361,11 +361,11 @@ export const loadPromise = (async () => {
       crouch: animations.find(a => a.isCrouch),
     }; */
   activateAnimations = {
-    grab_forward: { animation: animations.index['grab_forward.fbx'], speedFactor: 1.2 },
-    grab_down: { animation: animations.index['grab_down.fbx'], speedFactor: 1.7 },
-    grab_up: { animation: animations.index['grab_up.fbx'], speedFactor: 1.2 },
-    grab_left: { animation: animations.index['grab_left.fbx'], speedFactor: 1.2 },
-    grab_right: { animation: animations.index['grab_right.fbx'], speedFactor: 1.2 },
+    grab_forward: {animation: animations.index['grab_forward.fbx'], speedFactor: 1.2},
+    grab_down: {animation: animations.index['grab_down.fbx'], speedFactor: 1.7},
+    grab_up: {animation: animations.index['grab_up.fbx'], speedFactor: 1.2},
+    grab_left: {animation: animations.index['grab_left.fbx'], speedFactor: 1.2},
+    grab_right: {animation: animations.index['grab_right.fbx'], speedFactor: 1.2},
   };
   narutoRunAnimations = {
     narutoRun: animations.find(a => a.isNarutoRun),
@@ -390,7 +390,7 @@ export const loadPromise = (async () => {
 });
 
 const _getMirrorAnimationAngles = (animationAngles, key) => {
-  const animations = animationAngles.map(({ animation }) => animation);
+  const animations = animationAngles.map(({animation}) => animation);
   const animationAngleArrayMirror = animationsAngleArraysMirror[key];
 
   const backwardIndex = animations.findIndex(a => a.isBackward);
@@ -417,7 +417,7 @@ const _getMirrorAnimationAngles = (animationAngles, key) => {
 };
 
 const _getAngleToBackwardAnimation = (angle, animationAngles) => {
-  const animations = animationAngles.map(({ animation }) => animation);
+  const animations = animationAngles.map(({animation}) => animation);
 
   const backwardIndex = animations.findIndex(a => a.isBackward);
   if (backwardIndex !== -1) {
@@ -494,7 +494,7 @@ const _get7wayBlend = (
     horizontalRunAnimationAngles,
     horizontalRunAnimationAnglesMirror,
   } = angles;
-  const { idleWalkFactor, walkRunFactor } = moveFactors;
+  const {idleWalkFactor, walkRunFactor} = moveFactors;
   // WALK
   // normal horizontal walk blend
   {
@@ -673,7 +673,7 @@ const _blendActivateAction = spec => {
 
     let defaultAnimation = 'grab_forward';
 
-    if (localPlayer.getAction('activate')) {
+    if (localPlayer.getAction('activate').animationName) {
       defaultAnimation = localPlayer.getAction('activate').animationName;
     }
 
@@ -763,10 +763,10 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       activeAvatar.backwardAnimationSpec = null;
     } else {
       mirrorFactor = activeAvatar.backwardAnimationSpec.startFactor +
-        Math.pow(
-          f,
-          0.5,
-        ) * (activeAvatar.backwardAnimationSpec.endFactor - activeAvatar.backwardAnimationSpec.startFactor);
+                Math.pow(
+                  f,
+                  0.5,
+                ) * (activeAvatar.backwardAnimationSpec.endFactor - activeAvatar.backwardAnimationSpec.startFactor);
     }
   } else {
     mirrorFactor = isBackward ? 1 : 0;
@@ -882,8 +882,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         } */
     if (
       activeAvatar.useAnimation ||
-      activeAvatar.useAnimationCombo.length > 0 ||
-      activeAvatar.useAnimationEnvelope.length > 0
+            activeAvatar.useAnimationCombo.length > 0 ||
+            activeAvatar.useAnimationEnvelope.length > 0
     ) {
       return spec => {
         const {
@@ -1144,7 +1144,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 export {
   animations,
   animationStepIndices,
-  cubicBezier
+ cubicBezier
 };
 
 export const getClosest2AnimationAngles = (key, angle) => {
@@ -1171,7 +1171,7 @@ export const _getLerpFn = isPosition => isPosition ? Vector3.prototype.lerp : Qu
 
 export function getFirstPersonCurves(vrmExtension) {
   if (vrmExtension) {
-    const { firstPerson } = vrmExtension;
+    const {firstPerson} = vrmExtension;
     const {
       lookAtHorizontalInner,
       lookAtHorizontalOuter,
