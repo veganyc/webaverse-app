@@ -86,18 +86,21 @@ export const User = ({ address, setAddress, setLoginFrom }) => {
                 WebaWallet.waitForLaunch().then( async () => {
 
                     const loginResponse = await WebaWallet.loginDiscord( code, id );
-
-                    if ( loginResponse && loginResponse.address ) {
-
-                        setAddress( loginResponse.address );
-                        setLoginFrom( 'discord' );
-                        setShow( false );
-
+                  try {
+                    if ( loginResponse ) {
+                      
+                      setAddress( loginResponse.address );
+                      setLoginFrom( 'discord' );
+                      setShow( false );
+                      
                     } else if ( error ) {
-
-                        setLoginError( String( loginResponse.error ).toLocaleUpperCase() );
-
+                      
+                      setLoginError( String( loginResponse.error ).toLocaleUpperCase() );
+                      
                     }
+                  } catch (error ){
+                    console.warn("Unable to log in after 30 seconds with Discord")
+                  }
 
                     window.history.pushState( {}, '', window.location.origin );
                     setLoggingIn( false );
