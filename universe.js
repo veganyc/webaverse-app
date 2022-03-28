@@ -75,7 +75,7 @@ class Universe extends EventTarget {
     });
 
     localPlayer.resetPhysics();
-    physicsManager.setPhysicsEnabled(true);
+    // physicsManager.setPhysicsEnabled(true);
     localPlayer.updatePhysics(0, 0);
 
     this.currentWorld = worldSpec;

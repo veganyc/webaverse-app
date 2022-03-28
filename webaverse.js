@@ -80,6 +80,7 @@ export default class Webaverse extends EventTarget {
       ]);
     })();
     this.contentLoaded = false;
+    this.appManager = world.appManager;
   }
   
   waitForLoad() {

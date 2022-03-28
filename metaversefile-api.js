@@ -172,6 +172,11 @@ const _bindAppManagerToLoreAIScene = (appManager, loreAIScene) => {
       name: app.name,
       description: app.description,
     });
+    
+    setTimeout(() => {
+      app.appType === "glb" && physicsManager.setPhysicsEnabled(true);
+    }, 500);
+
     bindings.set(app, object);
   });
   appManager.addEventListener('appremove', e => {

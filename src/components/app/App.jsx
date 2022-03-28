@@ -28,7 +28,6 @@ import styles from './App.module.css';
 const _startApp = async ( weba, canvas ) => {
 
     weba.setContentLoaded();
-
     weba.bindInput();
     weba.bindInterface();
     weba.bindCanvas( canvas );
@@ -89,7 +88,6 @@ export const App = () => {
     };
 
     useEffect( () => {
-
         const pushstate = e => {
 
             _loadUrlState();
@@ -116,7 +114,6 @@ export const App = () => {
     useEffect( _loadUrlState, [] );
 
     useEffect( () => {
-
         if ( canvasRef.current ) {
 
             _startApp( app, canvasRef.current );
