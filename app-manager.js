@@ -12,6 +12,7 @@ import metaversefile from 'metaversefile';
 import * as metaverseModules from './metaverse-modules.js';
 import { jsonParse } from './util.js';
 import { worldMapName } from './constants.js';
+import { scene } from "./renderer.js";
 
 const localVector = new THREE.Vector3();
 const localVector2 = new THREE.Vector3();
@@ -175,6 +176,8 @@ class AppManager extends EventTarget {
     this.appsArray = nextAppsArray;
   }
   loadApps() {
+    console.error('loadApps', this.appsArray.length, this.appsArray)
+    let length = this.appsArray.length
     for (let i = 0; i < this.appsArray.length; i++) {
       const trackedApp = this.appsArray.get(i, Z.Map);
       this.dispatchEvent(
@@ -229,7 +232,7 @@ class AppManager extends EventTarget {
         scale,
         components: componentsString,
       } = trackedAppJson;
-      // console.log("trackedAppJson is", trackedAppJson)
+      console.log("trackedAppJson is", trackedAppJson)
       const components = JSON.parse(componentsString);
 
       const p = makePromise();
@@ -529,7 +532,21 @@ class AppManager extends EventTarget {
     });
   }
   addApp(app) {
+    console.error('addApp Started', this.apps )
+    let isExist = false
+    const self = this
+    scene.traverse( function(child) {
+      if (child.isApp && child.instanceId == app.instanceId) {
+        //remove old duplicate app
+        self.removeApp(child)
+        isExist = true
+      }
+    });
+
+    // if (isExist) return
+
     this.apps.push(app);
+    scene.add(app)
 
     this.dispatchEvent(
       new MessageEvent('appadd', {
@@ -541,8 +558,8 @@ class AppManager extends EventTarget {
     const index = this.apps.indexOf(app);
     // console.log('remove app', app.instanceId, app.contentId, index, this.apps.map(a => a.instanceId), new Error().stack);
     if (index !== -1) {
+      if (app.parent && app.parent.remove) app.parent.remove(app)
       this.apps.splice(index, 1);
-
       this.dispatchEvent(
         new MessageEvent('appremove', {
           data: app,

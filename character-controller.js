@@ -154,17 +154,6 @@ class PlayerBase extends THREE.Object3D {
 
     this.appManager = new AppManager();
 
-    this.appManager.addEventListener("appadd", (e) => {
-      // console.log("e", e)
-      const app = e.data;
-      scene.add(app);
-      // console.log("appadd called")
-    });
-    this.appManager.addEventListener("appremove", (e) => {
-      const app = e.data;
-      app.parent && app.parent.remove(app);
-    });
-
     this.eyeballTarget = new THREE.Vector3();
     this.eyeballTargetEnabled = false;
     this.voicePack = null;
